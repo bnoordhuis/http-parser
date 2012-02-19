@@ -1342,6 +1342,70 @@ const struct message responses[] =
   }
 #endif /* !HTTP_PARSER_STRICT */
 
+#define ISSUE_95 20
+/* Should handle spaces in header fields */
+, {.name= "issue 95"
+  ,.type= HTTP_RESPONSE
+  ,.raw= "HTTP/1.1 200 OK\r\n"
+         "Date: Sun, 19 Feb 2012 21:20:50 GMT\r\n"
+         "Server: Apache/2.2.9 (Debian) PHP/5.2.6-1+lenny16 with Suhosin-Patch mod_python/3.3.1 Python/2.5.2 mod_ssl/2.2.9 OpenSSL/0.9.8g mod_perl/2.0.4 Perl/v5.10.0\r\n"
+         "Last-Modified: Mon, 29 Sep 2003 08:34:25 GMT\r\n"
+         "ETag: \"3d7130-b8-3c873c3fc0640\"\r\n"
+         "Accept-Ranges: bytes\r\n"
+         "Content-Length: 184\r\n"
+         "Vary: Accept-Encoding\r\n"
+         "Content-Type: text/html\r\n"
+         "\r\n"
+         "<HTML>\n"
+         "<HEAD>\n"
+         "<TITLE>Are you tired?</TITLE>\n"
+         "</HEAD>\n"
+         "<BODY BGCOLOR=#FFFFFF>\n"
+         "<PRE>\n"
+         "<CENTER>\n"
+         "\n"
+         "\n"
+         "\n"
+         "Are you tired?\n"
+         "\n"
+         "Tell <a href=\"mailto:tired@tired.com\">us</a> why.\n"
+         "</CENTER>\n"
+         "</PRE>\n"
+         "</BODY>\n"
+  ,.should_keep_alive= TRUE
+  ,.message_complete_on_eof= FALSE
+  ,.http_major= 1
+  ,.http_minor= 1
+  ,.status_code= 200
+  ,.num_headers= 8
+  ,.headers=
+    { { "Date", "Sun, 19 Feb 2012 21:20:50 GMT" }
+    , { "Server", "Apache/2.2.9 (Debian) PHP/5.2.6-1+lenny16 with Suhosin-Patch mod_python/3.3.1 Python/2.5.2 mod_ssl/2.2.9 OpenSSL/0.9.8g mod_perl/2.0.4 Perl/v5.10.0" }
+    , { "Last-Modified", "Mon, 29 Sep 2003 08:34:25 GMT" }
+    , { "ETag", "\"3d7130-b8-3c873c3fc0640\"" }
+    , { "Accept-Ranges", "bytes" }
+    , { "Content-Length", "184" }
+    , { "Vary", "Accept-Encoding" }
+    , { "Content-Type", "text/html" }
+    }
+  ,.body= "<HTML>\n"
+          "<HEAD>\n"
+          "<TITLE>Are you tired?</TITLE>\n"
+          "</HEAD>\n"
+          "<BODY BGCOLOR=#FFFFFF>\n"
+          "<PRE>\n"
+          "<CENTER>\n"
+          "\n"
+          "\n"
+          "\n"
+          "Are you tired?\n"
+          "\n"
+          "Tell <a href=\"mailto:tired@tired.com\">us</a> why.\n"
+          "</CENTER>\n"
+          "</PRE>\n"
+          "</BODY>\n"
+  }
+
 , {.name= NULL } /* sentinel */
 };
 
