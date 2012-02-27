@@ -2617,6 +2617,43 @@ test:
   parser_free();
 }
 
+static int
+pause_after_headers_on_headers_complete(http_parser *parser)
+{
+  http_parser_pause(parser, 1);
+  return 0;
+}
+
+static int
+pause_after_headers_on_message_complete(http_parser *parser)
+{
+  (void) parser;
+  assert(0);
+  abort();
+  return -1;
+}
+
+void
+test_pause_after_headers(void)
+{
+  const char input[] =
+    "GET / HTTP/1.1\r\n"
+    "Host: example.com\r\n"
+    "\r\n"
+  ;
+  http_parser_settings settings;
+  http_parser parser;
+  size_t n;
+
+  memset(&settings, 0, sizeof(settings));
+  settings.on_headers_complete = pause_after_headers_on_headers_complete;
+  settings.on_message_complete = pause_after_headers_on_message_complete;
+
+  http_parser_init(&parser, HTTP_REQUEST);
+  n = http_parser_execute(&parser, &settings, input, sizeof(input) - 1);
+  assert(n == sizeof(input) - 1);
+}
+
 int
 main (void)
 {
@@ -2633,6 +2670,7 @@ main (void)
   //// API
   test_preserve_data();
   test_parse_url();
+  test_pause_after_headers();
 
   //// OVERFLOW CONDITIONS
 
